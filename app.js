@@ -43,14 +43,44 @@
     homeBtn.classList.add('hidden');
     const set = QUESTION_SETS[0];
     const countOptions = getCountOptions(set.questions.length);
-    selectedCount = countOptions[countOptions.length - 1] || set.questions.length;
+    selectedCount = countOptions.includes(20) ? 20 : (countOptions[0] || set.questions.length);
 
     app.innerHTML = `
       <section class="home-wrap">
-        <div class="hero hero-modern">
-          <span class="eyebrow">UPGRADE PRACTICE</span>
-          <h1>Practice Makes <span>Perfect.</span></h1>
-          <p class="hero-sub">Keep going. One question at a time.</p>
+        <div class="hero hero-textbook">
+          <div class="hero-copy">
+            <div class="hero-rule"><span></span><b>ENGLISH PRACTICE</b><span></span></div>
+            <h1>UPGRADE<br><span>PRACTICE</span></h1>
+            <p class="hero-saying">Practice Makes Perfect.</p>
+            <p class="data-note">※データ設定の関係で、同じ問題が出題されることがあります。</p>
+          </div>
+
+          <div class="study-illustration" aria-hidden="true">
+            <svg viewBox="0 0 260 210" role="img">
+              <path class="blob" d="M44 44c26-31 70-43 113-30 44 13 73 51 70 93-3 43-40 80-88 86-48 6-98-22-113-65C13 91 20 72 44 44Z"/>
+              <path class="desk-line" d="M40 169H222"/>
+              <g class="book">
+                <path d="M63 111c19-8 39-7 59 3v48c-20-10-40-11-59-3Z"/>
+                <path d="M122 114c20-10 40-11 60-3v48c-20-8-40-7-60 3Z"/>
+                <path d="M122 114v48"/>
+                <path d="M75 124c11-3 22-2 34 2M75 137c11-3 22-2 34 2M135 126c11-4 22-5 34-2M135 139c11-4 22-5 34-2"/>
+              </g>
+              <g class="pencil">
+                <path d="M171 77l34 34-12 12-34-34Z"/>
+                <path d="M159 89l-7 20 20-7Z"/>
+                <path d="M205 111l8 8-12 12-8-8Z"/>
+              </g>
+              <g class="letters">
+                <text x="66" y="83">A</text>
+                <text x="95" y="65">B</text>
+                <text x="127" y="81">C</text>
+              </g>
+              <g class="sparkles">
+                <path d="M198 50v20M188 60h20"/>
+                <path d="M49 86v14M42 93h14"/>
+              </g>
+            </svg>
+          </div>
         </div>
 
         <article class="launch-card">
@@ -77,17 +107,13 @@
             </div>
           </div>
 
-          <div class="random-note">
-            <span class="shuffle-icon" aria-hidden="true">↝</span>
-            <div><strong>Random Order</strong><small>毎回、問題の順番をランダムにして出題します。</small></div>
-          </div>
-
           <button id="startPractice" class="start-btn" type="button">
-            <span>START PRACTICE</span><span class="start-arrow">→</span>
+            <span>Start!</span><span class="start-arrow">→</span>
           </button>
         </article>
       </section>
     `;
+
 
     app.querySelectorAll('[data-count]').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -135,7 +161,13 @@
         <article class="question-card">
           <div class="question-label">QUESTION ${index + 1}</div>
           <div class="question-text">${nl2br(q.text)}</div>
-          <div class="tap-hint">選択肢をタップして解答</div>
+
+          <div class="question-translation">
+            <div class="translation-badge">日本語</div>
+            <div class="translation-text">${escapeHtml(q.translation || '')}</div>
+          </div>
+
+          <div class="tap-hint">日本語の意味を確認して、選択肢をタップ</div>
           <div class="choices">
             ${q.choices.map((choice, i) => `
               <button class="choice" data-choice="${i}" type="button">
@@ -184,11 +216,7 @@
           ${isCorrect ? '<span>正解です。</span>' : `<span>正解：${letters[q.answer]}. ${escapeHtml(q.choices[q.answer])}</span>`}
         </div>
       </div>
-      <div class="learning-note">
-        <div class="note-row translation-row">
-          <div class="note-label">和訳</div>
-          <div class="note-body">${escapeHtml(q.translation || '')}</div>
-        </div>
+      <div class="learning-note point-only-note">
         <div class="note-row point-row">
           <div class="note-label point-label">POINT</div>
           <div class="note-body">${escapeHtml(q.tip || '')}</div>
